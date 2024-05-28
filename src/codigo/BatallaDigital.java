@@ -20,14 +20,83 @@ public class BatallaDigital {
 
 	public void elige(Domador domador) {
 		this.domador = domador;
-		// Obtener el equipo del domador
-		List<Digimon> equipo = domador.getEquipo();
-		// Generar un índice aleatorio dentro del rango del equipo
-		int indiceAleatorio = new Random().nextInt(equipo.size());
-		// Seleccionar el Digimon correspondiente al índice aleatorio
-		Digimon elegido = equipo.get(indiceAleatorio);
 
+		List<Digimon> equipo = domador.getEquipo();
+		
+		int indiceAleatorio = new Random().nextInt(equipo.size());
+
+		Digimon elegido = equipo.get(indiceAleatorio);
+		pelea(domador, elegido);
 	}
 	
+	public void pelea(Domador domador, Digimon miDigimon) {
+		while (miDigimon.getSalud() > 0 && enemigo.getSalud() > 0) {
+			System.out.println("\nTu Digimon: " + miDigimon.getNombre() + " \nNivel: " + miDigimon.getNivel() + "\nSalud: " + miDigimon.getSalud() + "\nAtaque: " + miDigimon.getAtaque() + "\nDP1: " + miDigimon.getDp1() + "\nDP2: " + miDigimon.getDp2());
+			System.out.println("\nEnemigo: " + enemigo.getNombre() + " Nivel: " + enemigo.getNivel() + ", Salud: " + enemigo.getSalud() + ", Ataque: " + enemigo.getAtaque() + ", DP1: " + enemigo.getDp1() + ", DP2: " + enemigo.getDp2() + ").");
+			System.out.println("\nOpciones:");
+			System.out.println("1. Ataque 1");
+			System.out.println("2. Ataque 2");
+			System.out.println("3. Capturar enemigo");
+
+			int opcion = 0;
+			boolean aux1 = true;
+
+			while (aux1) {
+				try {
+					System.out.print("Elige una opción: ");
+					opcion = leer.nextInt();
+					if (opcion < 1 || opcion > 3) {
+						System.out.println("Elige una opción entre 1 y 3");
+					} else {
+						aux1 = false;
+					}
+				} catch (InputMismatchException e) {
+					System.out.println("Error. Introduce un número");
+					leer.next(); // Limpiar el buffer del Scanner
+				}
+			}
+
+			switch (opcion) {
+			case 1:
+				miDigimon.usarAtaque1(enemigo);
+				System.out.println(miDigimon.getNombre() + " ha hecho " + miDigimon.getAtaque() + " puntos de daño con Ataque 1.");
+				break;
+			case 2:
+				miDigimon.usarAtaque2(enemigo);
+				System.out.println(miDigimon.getNombre() + " ha hecho " + (2 * miDigimon.getAtaque()) + " puntos de daño con Ataque 2.");
+				break;
+			case 3:
+				domador.captura(enemigo);
+				return;
+			default:
+				System.out.println("Opción no válida.");
+				continue;
+			}
+
+			if (enemigo.getSalud() > 0) {
+				if (new Random().nextBoolean()) {
+					enemigo.usarAtaque1(miDigimon);
+				} else {
+					enemigo.usarAtaque2(miDigimon);
+				}
+				System.out.println(enemigo.getNombre() + " ha hecho daño a tu Digimon.");
+			}
+		}
+
+		if (miDigimon.getSalud() <= 0) {
+			System.out.println("Tu Digimon " + miDigimon.getNombre() + " ha sido derrotado.");
+			// Si el Domador no tiene más Digimon en su equipo, termina la partida
+			if (domador.getEquipo().isEmpty()) {
+				System.out.println("¡Todos tus Digimon han sido derrotados! ¡Fin del juego!");
+				return;
+			} else {
+				// Si el Domador tiene más Digimon en su equipo, permite elegir otro Digimon
+				System.out.println("Elige otro Digimon para continuar la batalla:");
+				elige(domador);
+				miDigimon = domador.getEquipo().get(0); // Cambia al primer Digimon del equipo como el nuevo Digimon del jugador
+				System.out.println("Ahora luchas con " + miDigimon.getNombre());
+			}
+		}
+	}
 	
 }
