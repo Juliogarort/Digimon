@@ -33,45 +33,21 @@ public class BatallaDigital {
     }
 
     /**
-     * Permite al jugador elegir un Digimon de su equipo para pelear.
-     * Si el equipo tiene más de un Digimon, se da la opción de elegir uno al azar al comienzo.
-     * Después de capturar un Digimon, se puede elegir cuál usar.
+     * Se selecciona un Digimon de forma aleatoria con el que jugaremos
      *
      * @param domador el domador que posee el equipo de Digimons.
      * @throws InputMismatchException si el usuario ingresa un tipo de dato incorrecto al elegir un Digimon.
      */
-    public void elige(Domador domador) throws InputMismatchException {
-        this.domador = domador;
+	public void elige(Domador domador) {
+		this.domador = domador;
 
-        List<Digimon> equipo = domador.getEquipo();
+		List<Digimon> equipo = domador.getEquipo();
+		
+		int indiceAleatorio = new Random().nextInt(equipo.size());
 
-        // Elegir un Digimon aleatorio al inicio
-        if (equipo.size() == 1) {
-            Digimon elegido = equipo.get(0);
-            pelea(domador, elegido);
-        } else {
-            System.out.println("Elige un Digimon para la batalla:");
-            for (int i = 0; i < equipo.size(); i++) {
-                System.out.println((i + 1) + ". " + equipo.get(i).getNombre());
-            }
-
-            int opcion = -1;
-            while (opcion < 1 || opcion > equipo.size()) {
-                try {
-                    System.out.print("Elige una opción: ");
-                    opcion = leer.nextInt();
-                    if (opcion < 1 || opcion > equipo.size()) {
-                        System.out.println("Opción no válida. Elige un número entre 1 y " + equipo.size());
-                    }
-                } catch (InputMismatchException e) {
-                    throw new InputMismatchException("Error. Introduce un número.");
-                }
-            }
-
-            Digimon elegido = equipo.get(opcion - 1);
-            pelea(domador, elegido);
-        }
-    }
+		Digimon elegido = equipo.get(indiceAleatorio);
+		pelea(domador, elegido);
+	}
 
     /**
      * Ejecuta la batalla entre el Digimon del jugador y el Digimon enemigo.
