@@ -39,16 +39,16 @@ public class BatallaDigital {
             System.out.println("3. Capturar enemigo");
 
             int opcion = 0;
-            boolean aux1 = true;
+            boolean menu = true;
 
-            while (aux1) {
+            while (menu) {
                 try {
                     System.out.print("Elige una opción: ");
                     opcion = leer.nextInt();
                     if (opcion < 1 || opcion > 3) {
                         System.out.println("Elige una opción entre 1 y 3");
                     } else {
-                        aux1 = false;
+                        menu = false;
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Error. Introduce un número");
